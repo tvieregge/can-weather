@@ -1,7 +1,6 @@
 import csv
 import os
 
-data_start = 25
 directory = "./data"
 
 with open("output", 'w') as output_file:
@@ -13,13 +12,16 @@ with open("output", 'w') as output_file:
             continue
 
         with open("./data/" + filename) as data_file:
-            for i in range(data_start):
-                next(data_file)
-
             reader = csv.reader(data_file)
             for row in reader:
-                #print(row)
+                if row and row[0] == 'Date/Time':
+                    break
+
+            for row in reader:
                 data = [row[i] for i in [1,2,3,5,7]]
+                if data[0] == 'Year':
+                    print(row)
+                    print(filename)
                 if data.count('') == 0:
                     output_writer.writerow(data)
                 else:
