@@ -27,7 +27,7 @@ def window(l, index, aperture):
     if index >= len(l)-half_ap or index < half_ap:
         return []
     left = index-half_ap
-    right = index+half_ap
+    right = max(index+half_ap, index+1)
     temp = [l[left:right]]
     temp.extend(window(l, index+1, half_ap))
     return temp
@@ -37,6 +37,11 @@ def avg(l):
 
 def running_avg(l, aperture):
     return list(map(avg, (window(l, half_ap, half_ap))))
+
+def clip_x_vals(x_vals, half_ap):
+    if not half_ap:
+        return x_vals
+    return x_vals[half_ap:-half_ap]
 
 with open("output") as data_file:
     months = tuple(range(1,13))
@@ -49,7 +54,8 @@ with open("output") as data_file:
     for r in results:
         x_val = [datum[0] for datum in r]
         y_val = [datum[1] for datum in r]
-        plt.plot(x_val[half_ap:-half_ap], running_avg(y_val, half_ap))
+        plt.plot(clip_x_vals(x_val, half_ap),
+                 running_avg(y_val, half_ap))
 
     plt.legend(months, loc='best')
     plt.grid(True)
