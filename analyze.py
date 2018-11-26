@@ -17,10 +17,11 @@ def avg_dict(data):
             for year in data.keys()]
 
 def do_month(data, month):
-    return tuple(
+    return sorted(
+            tuple(
             avg_dict(
             group_days(
-            filter_data(data, month))))
+            filter_data(data, month)))))
 
 def window(l, index, aperture):
     if index >= len(l)-half_ap or index < half_ap:
@@ -44,9 +45,13 @@ with open("output") as data_file:
 
     aperture = 5
     half_ap = aperture//2
-    month1 = sorted(results[1])
-    x_val = [datum[0] for datum in month1]
-    y_val = [datum[1] for datum in month1]
-    plt.plot(x_val[half_ap:-half_ap], running_avg(y_val, half_ap))
+
+    for r in results:
+        x_val = [datum[0] for datum in r]
+        y_val = [datum[1] for datum in r]
+        plt.plot(x_val[half_ap:-half_ap], running_avg(y_val, half_ap))
+
+    plt.legend(months, loc='best')
+    plt.grid(True)
     plt.show()
 
