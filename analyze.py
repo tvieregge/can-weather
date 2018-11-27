@@ -2,27 +2,25 @@ import csv
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-# Variables for controlling the analysis
-#   data:column refers to the column in the "output" file
+# Variable for controlling the analysis
 #   aperture refers to the width to use for the running average
-data_column = 1
-aperture = 1
+aperture = 5
 
 def filter_data(data, month):
     return [(int(entry[0]), float(entry[3]))
             for entry in filter(lambda datum: int(datum[1])==month, data)]
 
-def group_days(column, l):
+def group_days(l):
     by_year = defaultdict(list)
     for entry in l:
-        by_year[entry[0]].append(entry[column])
+        by_year[entry[0]].append(entry[1])
     return by_year
 
-def process_month(data, month, data_column):
+def process_month(data, month):
     return sorted(
             tuple(
             avg_years(
-            group_days(data_column,
+            group_days(
             filter_data(data, month)))))
 
 def window(l, index, aperture):
@@ -53,7 +51,7 @@ def clip_x_vals(x_vals, half_ap):
 with open("output") as data_file:
     months = tuple(range(1,13))
     data = tuple(csv.reader(data_file))
-    results = [process_month(data, month, data_column) for month in months]
+    results = [process_month(data, month) for month in months]
 
     half_ap = aperture//2
     for r in results:

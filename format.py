@@ -1,6 +1,10 @@
 import csv
 import os
 
+# Variable for controlling the analysis
+#   data:column refers to the column input data file
+data_column = 5
+
 directory = "./data"
 
 with open("output", 'w') as output_file:
@@ -18,7 +22,7 @@ with open("output", 'w') as output_file:
                     break
 
             for row in reader:
-                data = [row[i] for i in [1,2,3,5,7]]
+                data = [row[i] for i in [1,2,3,data_column]]
                 if data[0] == 'Year':
                     print(row)
                     print(filename)
